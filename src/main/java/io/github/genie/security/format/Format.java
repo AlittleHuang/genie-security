@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 public interface Format<I, O> {
 
     @NotNull
-    O format(@NotNull I rawPassword);
+    O format(@NotNull I raw);
 
     @NotNull
-    I parse(@NotNull O encodedPassword) throws IllegalArgumentException;
+    I parse(@NotNull O format) throws IllegalArgumentException;
 
 }
