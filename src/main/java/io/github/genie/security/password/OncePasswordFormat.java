@@ -70,17 +70,15 @@ public class OncePasswordFormat implements PasswordFormat {
     }
 
     protected Password of(byte[] decrypt) {
-        int firstIndex = indexOfFf(decrypt);
-
-        ByteBuffer buffer = ByteBuffer.wrap(decrypt, firstIndex, decrypt.length - firstIndex);
+        int paddingLength = paddingLength(decrypt);
+        ByteBuffer buffer = ByteBuffer.wrap(decrypt, paddingLength, decrypt.length - paddingLength);
         long createTime = buffer.getLong();
-
-        int passOffset = Long.BYTES + firstIndex;
-        String rawPassword = new String(decrypt, passOffset, decrypt.length - passOffset, StandardCharsets.UTF_8);
+        int pwdOffset = Long.BYTES + paddingLength;
+        String rawPassword = new String(decrypt, pwdOffset, decrypt.length - pwdOffset, StandardCharsets.UTF_8);
         return new Password(createTime, rawPassword);
     }
 
-    private static int indexOfFf(byte[] decrypt) {
+    private static int paddingLength(byte[] decrypt) {
         for (int i = 0; i < decrypt.length; i++) {
             if (decrypt[i] == START_BYTE_VALUE) {
                 return i + 1;
