@@ -1,37 +1,45 @@
 package io.github.genie.security.password;
 
+import io.github.genie.security.format.Base64Format;
+import io.github.genie.security.format.BinaryFormat;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class FastPasswordEncoder implements PasswordEncoder {
+public class DigestPasswordEncoder implements PasswordEncoder {
 
-    public static final int DEFAULT_SALT_LENGTH = Long.BYTES * 2;
+    public static final int DEFAULT_SALT_BYTES = Long.BYTES * 2;
     public static final String DEFAULT_ALGORITHM = "SHA-256";
+    public static final Base64Format DEFAULT_FORMAT = Base64Format.of();
 
     public final int saltLength;
     private final byte[] key;
     private final String algorithm;
+    private final BinaryFormat format;
 
-    public FastPasswordEncoder(byte[] key) {
-        this(key, DEFAULT_SALT_LENGTH, DEFAULT_ALGORITHM);
+    public DigestPasswordEncoder(byte[] key) {
+        this(key, DEFAULT_SALT_BYTES, DEFAULT_ALGORITHM, DEFAULT_FORMAT);
     }
 
-    public FastPasswordEncoder(byte[] key, int saltLength, String algorithm) {
+    public DigestPasswordEncoder(byte[] key,
+                                 int saltLength,
+                                 String algorithm,
+                                 BinaryFormat format) {
         this.saltLength = saltLength;
         this.key = key;
         this.algorithm = algorithm;
+        this.format = format;
         getMessageDigest();
     }
 
     @Override
     public @NotNull String encode(CharSequence rawPassword) {
-        return doEncode(rawPassword, getRandomBytes());
+        byte[] bytes = digest(rawPassword, getRandomBytes());
+        return format.format(bytes);
     }
 
     private byte[] getRandomBytes() {
@@ -40,7 +48,7 @@ public class FastPasswordEncoder implements PasswordEncoder {
         return randomBytes;
     }
 
-    protected String doEncode(CharSequence rawPassword, byte[] random) {
+    protected byte[] digest(CharSequence rawPassword, byte[] random) {
         byte[] src = rawPassword.toString().getBytes(StandardCharsets.UTF_8);
         MessageDigest digest = getMessageDigest();
         digest.update(src);
@@ -50,23 +58,23 @@ public class FastPasswordEncoder implements PasswordEncoder {
         byte[] dist = new byte[saltLength + digestBytes.length];
         System.arraycopy(random, 0, dist, 0, saltLength);
         System.arraycopy(digestBytes, 0, dist, saltLength, digestBytes.length);
-        return Base64.getEncoder().encodeToString(dist);
+        return dist;
     }
 
     private MessageDigest getMessageDigest() {
         try {
             return MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
     @Override
     public boolean matches(@NotNull CharSequence rawPassword, @NotNull String encodedPassword) {
         try {
-            byte[] decode = Base64.getDecoder().decode(encodedPassword);
-            String expected = doEncode(rawPassword, decode);
-            return Objects.equals(encodedPassword, expected);
+            byte[] expected = format.parse(encodedPassword);
+            byte[] actual = digest(rawPassword, expected);
+            return Arrays.equals(expected, actual);
         } catch (Exception e) {
             return false;
         }
