@@ -1,16 +1,9 @@
 package io.github.genie.security.password;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 class EncryptionUtil {
@@ -23,7 +16,7 @@ class EncryptionUtil {
         return encrypt(key, iv, input);
     }
 
-    private static byte[] encrypt(SecretKeySpec keySpec, byte[] iv, byte[] input) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    private static byte[] encrypt(SecretKeySpec keySpec, byte[] iv, byte[] input) throws GeneralSecurityException {
         IvParameterSpec ips = new IvParameterSpec(iv);
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ips);
