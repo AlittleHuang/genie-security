@@ -1,7 +1,8 @@
-package io.github.genie.security.password;
+package io.github.genie.security.password.beans;
 
 import io.github.genie.security.format.Base64Format;
 import io.github.genie.security.format.BinaryFormat;
+import io.github.genie.security.password.PasswordEncoder;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -10,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class DigestPasswordEncoder implements PasswordEncoder {
+public class PasswordDigest implements PasswordEncoder {
 
     public static final int DEFAULT_SALT_BYTES = Long.BYTES * 2;
     public static final String DEFAULT_ALGORITHM = "SHA-256";
@@ -21,14 +22,14 @@ public class DigestPasswordEncoder implements PasswordEncoder {
     private final String algorithm;
     private final BinaryFormat format;
 
-    public DigestPasswordEncoder(byte[] key) {
+    public PasswordDigest(byte[] key) {
         this(key, DEFAULT_SALT_BYTES, DEFAULT_ALGORITHM, DEFAULT_FORMAT);
     }
 
-    public DigestPasswordEncoder(byte[] key,
-                                 int saltLength,
-                                 String algorithm,
-                                 BinaryFormat format) {
+    public PasswordDigest(byte[] key,
+                          int saltLength,
+                          String algorithm,
+                          BinaryFormat format) {
         this.saltLength = saltLength;
         this.key = key;
         this.algorithm = algorithm;

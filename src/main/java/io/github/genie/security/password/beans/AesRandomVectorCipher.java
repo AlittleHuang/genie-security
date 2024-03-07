@@ -1,4 +1,4 @@
-package io.github.genie.security.password;
+package io.github.genie.security.password.beans;
 
 import io.github.genie.security.format.Decryptor;
 import io.github.genie.security.format.Encryptor;
