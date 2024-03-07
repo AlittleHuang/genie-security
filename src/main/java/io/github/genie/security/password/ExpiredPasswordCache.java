@@ -1,10 +1,10 @@
 package io.github.genie.security.password;
 
-import java.time.Duration;
+import java.time.Instant;
 
 public interface ExpiredPasswordCache {
 
-    void put(String encodedPassword, Duration timeToLife);
+    void put(String encodedPassword, Instant expiry);
 
     boolean exist(String encodedPassword);
 

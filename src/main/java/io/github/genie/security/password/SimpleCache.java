@@ -1,6 +1,6 @@
 package io.github.genie.security.password;
 
-import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -38,8 +38,8 @@ public class SimpleCache implements ExpiredPasswordCache {
     }
 
     @Override
-    public void put(String encodedPassword, Duration timeToLife) {
-        CACHE.put(encodedPassword, System.currentTimeMillis() + timeToLife.toMillis());
+    public void put(String encodedPassword, Instant expiry) {
+        CACHE.put(encodedPassword, expiry.toEpochMilli());
     }
 
     @Override

@@ -11,10 +11,6 @@ import java.util.concurrent.ThreadLocalRandom;
 class DigestPasswordEncoderTest {
 
     @Test
-    void encode() {
-    }
-
-    @Test
     void matches() {
 
         byte[] password = new byte[16];
