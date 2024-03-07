@@ -1,5 +1,9 @@
 package io.github.genie.security.format;
 
-public interface BinaryFormat extends Format<byte[], String> {
+import org.jetbrains.annotations.NotNull;
 
+public interface BinaryFormat {
+    @NotNull String format(byte @NotNull [] raw);
+
+    byte @NotNull [] parse(@NotNull String format) throws IllegalArgumentException;
 }
