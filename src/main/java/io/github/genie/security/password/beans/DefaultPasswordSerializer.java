@@ -1,42 +1,32 @@
 package io.github.genie.security.password.beans;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class DefaultPasswordSerializer implements PasswordSerializer, PasswordDeserializer {
-    public static final byte START_BYTE_VALUE = (byte) 0xff;
 
     @Override
     public TimeMarkedPassword deserialize(byte[] bytes) {
-        int paddingLength = paddingLength(bytes);
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, paddingLength, bytes.length - paddingLength);
+        bytes = Base64.getDecoder().decode(bytes);
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
         long createTime = buffer.getLong();
-        int pwdOffset = Long.BYTES + paddingLength;
+        int pwdOffset = Long.BYTES;
         String rawPassword = new String(bytes, pwdOffset, bytes.length - pwdOffset, StandardCharsets.UTF_8);
         return new TimeMarkedPassword(rawPassword, createTime);
     }
 
-    private static int paddingLength(byte[] decrypt) {
-        for (int i = 0; i < decrypt.length; i++) {
-            if (decrypt[i] == START_BYTE_VALUE) {
-                return i + 1;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
-
     @Override
-    public byte[] serialize(TimeMarkedPassword password) {
+    public byte[] serialize(@NotNull TimeMarkedPassword password) {
         byte[] pwd = password.getPassword().getBytes(StandardCharsets.UTF_8);
         int pwdBytes = pwd.length;
-
-        int dataLen = 1 + Long.BYTES + pwdBytes;
-        byte[] bytes = new byte[Math.max(dataLen, 47)];
-        int offset = bytes.length - dataLen;
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, bytes.length - offset);
-        buffer.put(START_BYTE_VALUE);
+        byte[] bytes = new byte[Long.BYTES + pwdBytes];
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
         buffer.putLong(password.getCreateTime());
         buffer.put(pwd);
-        return bytes;
+
+        return Base64.getEncoder().encode(bytes);
     }
 }
