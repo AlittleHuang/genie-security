@@ -36,7 +36,6 @@ public class HexFormat implements BinaryFormat {
         if ((hex.length() & 1) != 0) {
             throw new IllegalArgumentException("string length not even: " + hex.length());
         }
-        hex = hex.toUpperCase();
         int length = hex.length() >> 1;
         byte[] dst = new byte[length];
         for (int i = 0; i < length; i++) {
