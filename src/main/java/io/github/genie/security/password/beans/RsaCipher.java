@@ -32,7 +32,7 @@ public class RsaCipher implements Decryptor, Encryptor {
             keyPairGenerator.initialize(length);
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedSecurityException(e);
         }
     }
 
