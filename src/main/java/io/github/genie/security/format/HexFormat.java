@@ -47,8 +47,9 @@ public class HexFormat implements BinaryFormat {
     }
 
     public static int fromHexDigit(int ch) {
-        if ((ch >>> 7) == 0 && VALUES[ch] >= 0) {
-            return VALUES[ch];
+        int digit;
+        if ((ch >>> 7) == 0 && (digit = VALUES[ch]) >= 0) {
+            return digit;
         }
         throw new NumberFormatException("not a hexadecimal digit: \"" + (char) ch + "\" = " + ch);
     }
