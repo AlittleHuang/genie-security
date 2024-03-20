@@ -6,30 +6,24 @@ import io.github.genie.security.password.beans.PasswordSerializer;
 import io.github.genie.security.password.beans.TimeMarkedPassword;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.GeneralSecurityException;
-
-public class PasswordFormatter {
+public class PasswordEncryptor {
     private final Encryptor encryptor;
-    private final BinaryFormat binaryFormat;
+    private final BinaryFormat outputFormat;
     private final PasswordSerializer passwordSerializer;
 
-    public PasswordFormatter(Encryptor encryptor,
-                             BinaryFormat binaryFormat,
+    public PasswordEncryptor(Encryptor encryptor,
+                             BinaryFormat outputFormat,
                              PasswordSerializer passwordSerializer) {
         this.encryptor = encryptor;
-        this.binaryFormat = binaryFormat;
+        this.outputFormat = outputFormat;
         this.passwordSerializer = passwordSerializer;
     }
 
-    public @NotNull String format(@NotNull String rawPassword) {
-        TimeMarkedPassword password = new TimeMarkedPassword(rawPassword);
+    public @NotNull String encrypt(@NotNull String plaintext) {
+        TimeMarkedPassword password = new TimeMarkedPassword(plaintext);
         byte[] bytes = passwordSerializer.serialize(password);
-        try {
-            byte[] encrypt = encryptor.encrypt(bytes);
-            return binaryFormat.format(encrypt);
-        } catch (GeneralSecurityException e) {
-            throw new IllegalArgumentException(e);
-        }
+        byte[] encrypt = encryptor.encrypt(bytes);
+        return outputFormat.format(encrypt);
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class SimpleCache implements ExpiredPasswordCache {
+public class SimpleCache implements ExpiredCache {
 
     private static final ScheduledExecutorService scheduler = Executors
             .newSingleThreadScheduledExecutor(r -> {
@@ -15,12 +15,7 @@ public class SimpleCache implements ExpiredPasswordCache {
                 return thread;
             });
 
-    private static final SimpleCache SIMPLE_CACHE = new SimpleCache();
     private static final Map<String, Long> CACHE = new ConcurrentHashMap<>();
-
-    public static SimpleCache of() {
-        return SIMPLE_CACHE;
-    }
 
     public SimpleCache() {
         int period = 1;
@@ -37,8 +32,8 @@ public class SimpleCache implements ExpiredPasswordCache {
     }
 
     @Override
-    public void put(String encodedPassword, long expiryAt) {
-        CACHE.put(encodedPassword, expiryAt);
+    public void put(String key, long expiryAt) {
+        CACHE.put(key, expiryAt);
     }
 
     @Override

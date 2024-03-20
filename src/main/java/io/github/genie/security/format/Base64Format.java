@@ -21,8 +21,8 @@ public class Base64Format implements BinaryFormat {
 
 
     @Override
-    public @NotNull String format(byte @NotNull [] raw) {
-        return encoder.encodeToString(raw);
+    public @NotNull String format(byte @NotNull [] input) {
+        return encoder.encodeToString(input);
     }
 
     @Override

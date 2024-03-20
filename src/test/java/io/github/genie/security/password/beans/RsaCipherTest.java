@@ -16,6 +16,15 @@ class RsaCipherTest {
         KeyPair keyPair = RsaCipher.generateKeyPair(1024);
         RsaCipher pub = RsaCipher.ofPublic(keyPair.getPublic());
         RsaCipher pri = RsaCipher.ofPrivate(keyPair.getPrivate());
+        testDecrypt(pub, pri);
+
+        pub = RsaCipher.ofPublic(keyPair.getPublic().getEncoded());
+        pri = RsaCipher.ofPrivate(keyPair.getPrivate().getEncoded());
+        testDecrypt(pub, pri);
+
+    }
+
+    private static void testDecrypt(RsaCipher pub, RsaCipher pri) throws GeneralSecurityException {
         byte[] bytes = new byte[117];
         byte[] pubEnc = pub.encrypt(bytes);
         Assertions.assertFalse(Arrays.equals(bytes, pubEnc));

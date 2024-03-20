@@ -21,12 +21,12 @@ public class HexFormat implements BinaryFormat {
     }
 
     @Override
-    public @NotNull String format(byte @NotNull [] raw) {
-        int l = raw.length, i = 0, j = 0;
+    public @NotNull String format(byte @NotNull [] input) {
+        int l = input.length, i = 0, j = 0;
         byte[] out = new byte[l << 1];
         while (i < l) {
-            out[j++] = digits[(0xf0 & raw[i]) >>> 4];
-            out[j++] = digits[0x0f & raw[i++]];
+            out[j++] = digits[(0xf0 & input[i]) >>> 4];
+            out[j++] = digits[0x0f & input[i++]];
         }
         return new String(out, StandardCharsets.US_ASCII);
     }
