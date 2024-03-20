@@ -22,7 +22,7 @@ public interface BinaryFormat {
      *
      * @param format string format
      * @return binary data
-     * @throws IllegalArgumentException the input ciphertext cannot be parsed.
+     * @throws IllegalArgumentException the input format cannot be parsed
      */
     byte @NotNull [] parse(@NotNull String format) throws IllegalArgumentException;
 }
