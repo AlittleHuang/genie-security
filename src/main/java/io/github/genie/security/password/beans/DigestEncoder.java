@@ -1,5 +1,6 @@
 package io.github.genie.security.password.beans;
 
+import io.github.genie.security.exception.UncheckedSecurityException;
 import io.github.genie.security.format.Base64Format;
 import io.github.genie.security.format.BinaryFormat;
 import io.github.genie.security.password.PasswordEncoder;
@@ -66,7 +67,7 @@ public class DigestEncoder implements PasswordEncoder {
         try {
             return MessageDigest.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
+            throw new UncheckedSecurityException(e);
         }
     }
 

@@ -27,10 +27,6 @@ public class Base64Format implements BinaryFormat {
 
     @Override
     public byte @NotNull [] parse(@NotNull String base64) throws IllegalArgumentException {
-        try {
-            return decoder.decode(base64);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+        return decoder.decode(base64);
     }
 }
