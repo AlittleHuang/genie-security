@@ -1,6 +1,6 @@
 package io.github.genie.security.password;
 
-import io.github.genie.security.password.beans.PasswordDigest;
+import io.github.genie.security.password.beans.DigestEncoder;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-class PasswordDigestTest {
+class DigestEncoderTest {
 
     @Test
     void matches() {
@@ -33,7 +33,7 @@ class PasswordDigestTest {
     private static PasswordEncoder getEncoder() {
         byte[] key = new byte[16];
         ThreadLocalRandom.current().nextBytes(key);
-        return new PasswordDigest(key);
+        return new DigestEncoder(key);
     }
 
 

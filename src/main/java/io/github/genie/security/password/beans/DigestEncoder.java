@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class PasswordDigest implements PasswordEncoder {
+public class DigestEncoder implements PasswordEncoder {
 
     public static final int DEFAULT_SALT_BYTES = Long.BYTES * 2;
     public static final String DEFAULT_ALGORITHM = "SHA-256";
@@ -22,14 +22,14 @@ public class PasswordDigest implements PasswordEncoder {
     private final String algorithm;
     private final BinaryFormat format;
 
-    public PasswordDigest(byte[] key) {
+    public DigestEncoder(byte[] key) {
         this(key, DEFAULT_SALT_BYTES, DEFAULT_ALGORITHM, DEFAULT_FORMAT);
     }
 
-    public PasswordDigest(byte[] key,
-                          int saltLength,
-                          String algorithm,
-                          BinaryFormat format) {
+    public DigestEncoder(byte[] key,
+                         int saltLength,
+                         String algorithm,
+                         BinaryFormat format) {
         this.saltLength = saltLength;
         this.key = key;
         this.algorithm = algorithm;
